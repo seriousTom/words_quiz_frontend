@@ -8,6 +8,7 @@ import { notifySuccess, notifyError } from "../../utils/toast";
 function Register() {
     const { register } = useContext(AuthContext);
 
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -18,7 +19,7 @@ function Register() {
         setLoading(true);
         setErrors({});
         try {
-            await register(email, password, confirmPassword);
+            await register(name, email, password, confirmPassword);
             notifySuccess('Registration successful.');
             // MainScreens will automatically render Drawer since userToken exists
         } catch (e) {
@@ -35,9 +36,10 @@ function Register() {
 
     return (
         <View style={layout.container}>
+            <Input label="Name" textInputConfig={{ placeholder: 'Name', onChangeText: setName }} errorText={errors.name?.[0]} />
             <Input label="Email" textInputConfig={{ placeholder: 'Email', onChangeText: setEmail }} errorText={errors.email?.[0]} />
             <Input label="Password" textInputConfig={{ placeholder: 'Password', onChangeText: setPassword, secureTextEntry: true }} errorText={errors.password?.[0]} />
-            <Input label="Confirm password" textInputConfig={{ placeholder: 'Confirm password', onChangeText: setConfirmPassword, secureTextEntry: true }} errorText={errors.password_confirmation?.[0]} />
+            <Input label="Confirm password" textInputConfig={{ placeholder: 'Confirm password', onChangeText: setConfirmPassword, secureTextEntry: true }} errorText={errors.password_confirmation?.[0]} style={layout.mb10}/>
             <Button title={loading ? 'Loading...' : 'Submit'} onPress={submitRegister} disabled={loading} />
         </View>
     );

@@ -14,6 +14,7 @@ import Statistics from "./screens/Statistics/Statistics";
 import Toast from 'react-native-toast-message';
 import {AuthContext, AuthProvider} from "./context/AuthContext";
 import {useContext} from "react";
+import { navigationRef } from './navigation/RootNavigation';
 
 if (__DEV__) {
     require("./ReactotronConfig");
@@ -53,7 +54,7 @@ function MainScreens() {
 export default function App() {
     return (
         <AuthProvider>
-            <NavigationContainer>
+            <NavigationContainer ref={navigationRef}>
                 <MainScreens></MainScreens>
                 <Toast/>
             </NavigationContainer>

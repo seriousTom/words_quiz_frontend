@@ -13,15 +13,15 @@ export const AuthProvider = ({ children }) => {
     // --- Login ---
     const login = async (email, password) => {
         const res = await axiosClient.post('/login', { email, password });
-        const token = res.data.access_token;
+        const token = res.data.token;
         await AsyncStorage.setItem('token', token);
         setUserToken(token);
     };
 
     // --- Register ---
-    const register = async (email, password, password_confirmation) => {
-        const res = await axiosClient.post('/register', { email, password, password_confirmation });
-        const token = res.data.access_token || res.data.token; // adjust to your backend
+    const register = async (name, email, password, password_confirmation) => {
+        const res = await axiosClient.post('/register', { name, email, password, password_confirmation });
+        const token = res.data.token; // adjust to your backend
         await AsyncStorage.setItem('token', token);
         setUserToken(token);
     };
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
     const logout = async () => {
         await AsyncStorage.removeItem('token');
         setUserToken(null);
-        navigate('Login'); // optional if you want to redirect immediately
+        // navigate('Login'); // optional if you want to redirect immediately
     };
 
     // --- Load token on app start ---
