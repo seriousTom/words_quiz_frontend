@@ -2,7 +2,7 @@ import {StyleSheet, Text, TextInput, View} from "react-native";
 
 function Input({label, style, textInputConfig, errorText}) {
     return <View style={[style]}>
-        <Text>{label}</Text>
+        {label && <Text>{label}</Text>}
         <TextInput style={styles.input} {...textInputConfig}/>
         {errorText && <Text style={styles.errorText}>{errorText}</Text>}
     </View>;

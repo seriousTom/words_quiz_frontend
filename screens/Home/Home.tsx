@@ -1,7 +1,11 @@
-import {Text, View} from "react-native";
+import {Button, Text, View} from "react-native";
 
-function Home() {
-    return <View><Text>Home</Text></View>;
+function Home({navigation}) {
+    return <View>
+        <Button title="Start game" onPress={() => {
+            navigation.navigate('GameFlow');
+        }}></Button>
+    </View>;
 }
 
 export default Home;
