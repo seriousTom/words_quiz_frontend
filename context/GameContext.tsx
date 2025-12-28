@@ -9,6 +9,7 @@ export const GameProvider = ({children}) => {
     const [words, setWords] = useState([]);
     // const [currentWord, setCurrentWord] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isFinishing, setIsFinishing] = useState(false);
     const guessesLogs = useRef({});
     const currentWord = useMemo(() => {
         console.log('get next word memo');
@@ -17,10 +18,10 @@ export const GameProvider = ({children}) => {
     }, [words]);
 
     const fetchWords = async (numberOfWords) => {
-        setIsLoading(true);
+        // setIsLoading(true);
         const {data: {data}} = await wordsApi.list('es', numberOfWords);
         setWords(data);
-        setIsLoading(false);
+        // setIsLoading(false);
     };
 
     //unused for now
@@ -39,10 +40,12 @@ export const GameProvider = ({children}) => {
     };
 
     const finishGame = async () => {
-        setIsLoading(true);
+        setIsFinishing(true);
         const guessesLog = await AsyncStorage.getItem('guesses_logs')
         await wordsApi.logGuesses('es', JSON.parse(guessesLog));
-        setIsLoading(false);
+        await AsyncStorage.removeItem('guesses_logs');
+        guessesLogs.current = {};
+        setIsFinishing(false);
     };
 
     const logGuess = async (language, wordId, mistakes) => {
@@ -69,5 +72,21 @@ export const GameProvider = ({children}) => {
         await AsyncStorage.setItem('guesses_logs', JSON.stringify(logs));
     };
 
-    return <GameContext.Provider value={{words, currentWord, isLoading, fetchWords, getNextWord, handleCorrectGuess, logGuess, finishGame}}>{children}</GameContext.Provider>;
+    const fetchNextWordsWithLogs = async (numberOfWords) => {
+        setIsLoading(true);
+
+        // Flush local logs first
+        const logs = await AsyncStorage.getItem('guesses_logs');
+        if (logs) {
+            await wordsApi.logGuesses('es', JSON.parse(logs));
+            await AsyncStorage.removeItem('guesses_logs'); // clear local logs
+            guessesLogs.current = {};
+        }
+
+        // Fetch next batch
+        await fetchWords(numberOfWords);
+        setIsLoading(false);
+    };
+
+    return <GameContext.Provider value={{words, currentWord, isLoading, fetchWords, fetchNextWordsWithLogs, getNextWord, handleCorrectGuess, logGuess, finishGame, isFinishing, setIsFinishing}}>{children}</GameContext.Provider>;
 };

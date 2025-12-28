@@ -1,6 +1,6 @@
 import {Text, View} from "react-native";
 import {wordsApi} from "../../api/wordsApi";
-import {use, useEffect, useState, useContext} from "react";
+import {use, useEffect, useState, useContext, useMemo} from "react";
 import {GAME_MODES} from "../../constants/gameMode";
 import WriteTheWord from "../../components/Game/WriteTheWord";
 import {GameContext} from "../../context/GameContext";
@@ -9,68 +9,90 @@ import {Alert} from 'react-native';
 
 function Game({route}) {
     const navigation = useNavigation();
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [pendingAction, setPendingAction] = useState(null);
     const {numberOfWords, gameMode} = route.params;
-    const {words, currentWord, isLoading, fetchWords, getNextWord, handleCorrectGuess, finishGame} = useContext(GameContext);
+    const {
+        words,
+        currentWord,
+        isLoading,
+        isFinishing,
+        fetchWords,
+        fetchNextWordsWithLogs,
+        getNextWord,
+        handleCorrectGuess,
+        finishGame
+    } = useContext(GameContext);
 
     //fetch words when the game is loaded first
     useEffect(() => {
-        fetchWords(numberOfWords);
+        fetchNextWordsWithLogs(numberOfWords);
     }, []);
 
+    const isGameOver = useMemo(() => {
+        return (
+            !isLoading &&
+            words.length === 0 &&
+            numberOfWords !== null
+        );
+    }, [isLoading, words, numberOfWords]);
+
     useEffect(() => {
-        console.log('words number changed');
-    }, [words]);
+        if (!isLoading && words.length === 0 && numberOfWords === null) {
+            console.log('fetching more words...');
+            fetchNextWordsWithLogs(numberOfWords);
+        }
+    }, [words, isLoading, numberOfWords, fetchWords]);
+
+    useEffect(() => {
+        if (isGameOver) {
+            finishGame();
+        }
+    }, [isGameOver]);
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+            if (isGameOver) return;
             e.preventDefault();
             Alert.alert(
                 'Leave game?',
                 'Do you really want to finish?',
                 [
-                    { text: 'Stay', style: 'cancel' },
+                    {text: 'Stay', style: 'cancel'},
                     {
                         text: 'Leave',
                         style: 'destructive',
-                        onPress: () => {
+                        onPress: async () => {
+                            await finishGame();
                             navigation.dispatch(e.data.action);
-                            finishGame();
                         },
                     },
                 ]
             );
         });
         return unsubscribe;
-    }, [navigation]);
+    }, [navigation, isGameOver, finishGame]);
 
     if (isLoading) {
         console.log('loading');
-        return <Text>Loading...</Text>;
+        return <Text>Loading game...</Text>;
     }
 
-    if (words.length === 0) {
-        //null means endless mode
-        if(numberOfWords == null) {
-            console.log('fetch more words');
-            fetchWords(numberOfWords);
-            return ;
-        }
-        finishGame();
+    if (isFinishing) return <Text>Finishing game...</Text>;
+
+    if (isGameOver) {
         return <Text>Game over!!!</Text>;
     }
 
-    // if (!currentWord) {
-    //     console.log('No word');
-    //     return <Text>No current word</Text>;
-    // }
+
+    if (!currentWord) {
+        console.log('No word');
+        return <Text>Loading word...</Text>;
+    }
 
     let gameModeComponent = null;
 
     switch (gameMode) {
         case GAME_MODES.WRITE:
-            gameModeComponent = <WriteTheWord />;
+            gameModeComponent = <WriteTheWord/>;
     }
 
     return <View>
