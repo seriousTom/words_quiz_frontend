@@ -4,7 +4,6 @@ import {layout} from "../../styles/layout";
 import Button from "../../components/UI/Button";
 import {GameMode, GAME_MODES, GAME_MODE_LABELS} from "../../constants/gameMode";
 
-
 function StartGame({navigation}) {
     const wordsOptions = [3, 25, 50, 100];
 
@@ -12,6 +11,7 @@ function StartGame({navigation}) {
     const [gameMode, setGameMode] = useState<GameMode>(GAME_MODES.WRITE);
 
     const startGame = () => {
+        console.log('starting...');
         navigation.navigate('Game', {
             numberOfWords,
             gameMode
