@@ -17,9 +17,9 @@ export const GameProvider = ({children}) => {
         return words[Math.floor(Math.random() * words.length)];
     }, [words]);
 
-    const fetchWords = async (numberOfWords) => {
+    const fetchWords = async (language, gameType, numberOfWords) => {
         // setIsLoading(true);
-        const {data: {data}} = await wordsApi.list('es', numberOfWords);
+        const {data: {data}} = await wordsApi.getGameWords(language, gameType, numberOfWords);
         setWords(data);
         // setIsLoading(false);
     };
@@ -41,10 +41,12 @@ export const GameProvider = ({children}) => {
 
     const finishGame = async () => {
         setIsFinishing(true);
-        const guessesLog = await AsyncStorage.getItem('guesses_logs')
-        await wordsApi.logGuesses('es', JSON.parse(guessesLog));
-        await AsyncStorage.removeItem('guesses_logs');
-        guessesLogs.current = {};
+        const guessesLog = await AsyncStorage.getItem('guesses_logs');
+        if (guessesLog) {
+            await wordsApi.logGuesses('es', JSON.parse(guessesLog));
+            await AsyncStorage.removeItem('guesses_logs');
+            guessesLogs.current = {};
+        }
         setIsFinishing(false);
     };
 
@@ -55,7 +57,7 @@ export const GameProvider = ({children}) => {
             logs[language] = {};
         }
 
-        if(!logs[language][wordId]) {
+        if (!logs[language][wordId]) {
             logs[language][wordId] = {
                 language: language,
                 word_id: wordId,
@@ -72,7 +74,7 @@ export const GameProvider = ({children}) => {
         await AsyncStorage.setItem('guesses_logs', JSON.stringify(logs));
     };
 
-    const fetchNextWordsWithLogs = async (numberOfWords) => {
+    const fetchNextWordsWithLogs = async (language, gameType, numberOfWords) => {
         setIsLoading(true);
 
         // Flush local logs first
@@ -84,9 +86,21 @@ export const GameProvider = ({children}) => {
         }
 
         // Fetch next batch
-        await fetchWords(numberOfWords);
+        await fetchWords(language, gameType, numberOfWords);
         setIsLoading(false);
     };
 
-    return <GameContext.Provider value={{words, currentWord, isLoading, fetchWords, fetchNextWordsWithLogs, getNextWord, handleCorrectGuess, logGuess, finishGame, isFinishing, setIsFinishing}}>{children}</GameContext.Provider>;
+    return <GameContext.Provider value={{
+        words,
+        currentWord,
+        isLoading,
+        fetchWords,
+        fetchNextWordsWithLogs,
+        getNextWord,
+        handleCorrectGuess,
+        logGuess,
+        finishGame,
+        isFinishing,
+        setIsFinishing
+    }}>{children}</GameContext.Provider>;
 };

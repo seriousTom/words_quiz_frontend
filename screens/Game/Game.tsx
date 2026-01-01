@@ -6,6 +6,15 @@ import WriteTheWord from "../../components/Game/WriteTheWord";
 import {GameContext} from "../../context/GameContext";
 import {useNavigation} from '@react-navigation/native';
 import {Alert} from 'react-native';
+import MultipleChoice from "../../components/Game/MultipleChoice";
+
+const language = 'es';
+
+const GAME_COMPONENTS = {
+    [GAME_MODES.WRITE]: [WriteTheWord],
+    [GAME_MODES.MULTIPLE_CHOICE]: [MultipleChoice],
+    [GAME_MODES.MIXED]: [WriteTheWord, MultipleChoice],
+};
 
 function Game({route}) {
     const navigation = useNavigation();
@@ -22,9 +31,22 @@ function Game({route}) {
         finishGame
     } = useContext(GameContext);
 
+    //choose random component when the current word changes for the mixed mode
+    const mixedModeComponent = useMemo(() => {
+        if (gameMode !== GAME_MODES.MIXED) return null;
+
+        const components = GAME_COMPONENTS[GAME_MODES.MIXED];
+        return components[Math.floor(Math.random() * components.length)];
+    }, [currentWord, gameMode]);
+
+    const GameModeComponent =
+        gameMode === GAME_MODES.MIXED
+            ? mixedModeComponent
+            : GAME_COMPONENTS[gameMode][0];
+
     //fetch words when the game is loaded first
     useEffect(() => {
-        fetchNextWordsWithLogs(numberOfWords);
+        fetchNextWordsWithLogs(language, gameMode, numberOfWords);
     }, []);
 
     const isGameOver = useMemo(() => {
@@ -36,9 +58,10 @@ function Game({route}) {
     }, [isLoading, words, numberOfWords]);
 
     useEffect(() => {
+        //if endless game mode is chosen and need to fetch more words
         if (!isLoading && words.length === 0 && numberOfWords === null) {
             console.log('fetching more words...');
-            fetchNextWordsWithLogs(numberOfWords);
+            fetchNextWordsWithLogs(language, gameMode, numberOfWords);
         }
     }, [words, isLoading, numberOfWords, fetchWords]);
 
@@ -50,6 +73,7 @@ function Game({route}) {
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+            // navigation.dispatch(e.data.action);
             if (isGameOver) return;
             e.preventDefault();
             Alert.alert(
@@ -61,7 +85,9 @@ function Game({route}) {
                         text: 'Leave',
                         style: 'destructive',
                         onPress: async () => {
+                            console.log('starting to finish game');
                             await finishGame();
+                            console.log('game fininished. navigating...');
                             navigation.dispatch(e.data.action);
                         },
                     },
@@ -76,27 +102,23 @@ function Game({route}) {
         return <Text>Loading game...</Text>;
     }
 
-    if (isFinishing) return <Text>Finishing game...</Text>;
-
-    if (isGameOver) {
-        return <Text>Game over!!!</Text>;
+    if (!GameModeComponent) {
+        return <Text>Loading mode...</Text>;
     }
-
 
     if (!currentWord) {
         console.log('No word');
         return <Text>Loading word...</Text>;
     }
 
-    let gameModeComponent = null;
+    if (isFinishing) return <Text>Finishing game...</Text>;
 
-    switch (gameMode) {
-        case GAME_MODES.WRITE:
-            gameModeComponent = <WriteTheWord/>;
+    if (isGameOver) {
+        return <Text>Game over!!!</Text>;
     }
 
     return <View>
-        {gameModeComponent}
+        <GameModeComponent />
     </View>;
 }
 
