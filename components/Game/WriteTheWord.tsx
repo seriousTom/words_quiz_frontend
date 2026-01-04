@@ -3,6 +3,7 @@ import Input from "../UI/Input";
 import Button from "../UI/Button";
 import {useContext, useState, useEffect, useRef} from "react";
 import {GameContext} from "../../context/GameContext";
+import {layout} from "../../styles/layout";
 
 function WriteTheWord() {
     const mistakes = useRef(0);
@@ -63,7 +64,7 @@ function WriteTheWord() {
 
     return <View>
         <View>
-            <Text>{currentWord.word}</Text>
+            <Text style={styles.wordText}>{currentWord.word}</Text>
         </View>
         <View>
             <Text>{hint}</Text>
@@ -72,9 +73,21 @@ function WriteTheWord() {
             <Input textInputConfig={{value: guess, onChangeText: setGuess}}/>
         </View>
         <View>
-            <Button style="primary" onPress={guessWord}>Check</Button>
+            <Button style="primary" styles={[layout.buttonBlock]} onPress={guessWord} options={{icon: 'checkmark-circle-outline'}}>GUESS</Button>
         </View>
     </View>;
 }
 
 export default WriteTheWord;
+
+const styles = StyleSheet.create({
+    container: {
+        justifyContent: 'center',
+    },
+    wordText: {
+        color: '#0f172a',
+        fontWeight: 'bold',
+        fontSize: 48,
+        textAlign: 'center',
+    }
+});

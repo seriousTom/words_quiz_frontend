@@ -7,6 +7,7 @@ import {GameContext} from "../../context/GameContext";
 import {useNavigation} from '@react-navigation/native';
 import {Alert} from 'react-native';
 import MultipleChoice from "../../components/Game/MultipleChoice";
+import {layout} from "../../styles/layout";
 
 const language = 'es';
 
@@ -97,6 +98,12 @@ function Game({route}) {
         return unsubscribe;
     }, [navigation, isGameOver, finishGame]);
 
+    if (isFinishing) return <Text>Finishing game...</Text>;
+
+    if (isGameOver) {
+        return <Text>Game over!!!</Text>;
+    }
+
     if (isLoading) {
         console.log('loading');
         return <Text>Loading game...</Text>;
@@ -111,13 +118,7 @@ function Game({route}) {
         return <Text>Loading word...</Text>;
     }
 
-    if (isFinishing) return <Text>Finishing game...</Text>;
-
-    if (isGameOver) {
-        return <Text>Game over!!!</Text>;
-    }
-
-    return <View>
+    return <View style={layout.container}>
         <GameModeComponent />
     </View>;
 }

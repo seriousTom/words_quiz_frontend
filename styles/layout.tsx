@@ -4,6 +4,8 @@ const colorDefaultBorder = '#6c757d';
 const colorDefaultText = '#212529';
 const colorDefaultActive = '#e2e6ea';
 
+const darkTextColor = '#0f172a';
+
 const colorPrimaryText = '#ffffff';
 const colorPrimary = '#007bff';
 const colorPrimaryActive = '#0062cc';
@@ -19,9 +21,13 @@ export const layout = StyleSheet.create({
     centeredContainer: {
         ...baseContainer,
         justifyContent: "center",
+        alignItems: "center",
+        borderColor: '#000',
+        borderWidth: 1,
+        // flexDirection: 'column'
     },
     mh5: {
-      marginHorizontal: 5,
+        marginHorizontal: 5,
     },
     mb5: {
         marginBottom: 5,
@@ -36,13 +42,28 @@ export const layout = StyleSheet.create({
         fontWeight: 700,
     },
     button: {
-        borderRadius: 5,
-        paddingHorizontal: 12,
-        paddingVertical: 8,
+        borderRadius: 9999,
+        paddingHorizontal: 20,
+        paddingVertical: 19,
         alignSelf: 'flex-start',
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        elevation: 3
+    },
+    buttonText: {
+        fontSize: 18,
+        fontFamily: 'Lexend-Bold',
+        // fontWeight: 700
+    },
+    buttonIcon: {
+        position: 'absolute',
+        right: 20
+    },
+    buttonActive: {
+        transform: [
+            { scale: 0.95 }
+        ]
     },
     buttonDefault: {
         // backgroundColor: colorPrimary,
@@ -64,5 +85,8 @@ export const layout = StyleSheet.create({
     },
     buttonPrimaryText: {
         color: colorPrimaryText
+    },
+    buttonBlock: {
+        width: '100%'
     }
 });
