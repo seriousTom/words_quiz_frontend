@@ -1,9 +1,10 @@
 import { layout } from "../../styles/layout";
-import { Pressable, Text, View, Animated } from "react-native";
+import { Pressable, Text, View, Animated, StyleSheet } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRef, useState } from "react";
+import colors from "../../styles/colors";
 
-function Button({ children, onPress, style, styles = [], options = {} }) {
+function Button({ children, onPress, style, outerStyles = [], options = {} }) {
     const scale = useRef(new Animated.Value(1)).current;
     const [isPressed, setIsPressed] = useState(false);
 
@@ -13,14 +14,14 @@ function Button({ children, onPress, style, styles = [], options = {} }) {
 
     switch (style) {
         case "primary":
-            pressableClass = layout.buttonPrimary;
-            pressedClass = layout.buttonPrimaryActive; // for color feedback
-            textClass = layout.buttonPrimaryText;
+            pressableClass = styles.buttonPrimary;
+            pressedClass = styles.buttonPrimaryActive; // for color feedback
+            textClass = styles.buttonPrimaryText;
             break;
         case "default":
-            pressableClass = layout.buttonDefault;
-            pressedClass = layout.buttonDefaultActive; // for color feedback
-            textClass = layout.buttonDefaultText;
+            pressableClass = styles.buttonDefault;
+            pressedClass = styles.buttonDefaultActive; // for color feedback
+            textClass = styles.buttonDefaultText;
             break;
     }
 
@@ -44,17 +45,17 @@ function Button({ children, onPress, style, styles = [], options = {} }) {
         <Pressable onPress={onPress} onPressIn={onPressIn} onPressOut={onPressOut}>
             <Animated.View
                 style={[
-                    layout.button,
+                    styles.button,
                     pressableClass,
                     isPressed && pressedClass,
-                    ...styles,
+                    ...outerStyles,
                     { transform: [{ scale }] },
                 ]}
             >
-                <Text style={[layout.buttonText, textClass]}>{children}</Text>
+                <Text style={[styles.buttonText, textClass]}>{children}</Text>
 
                 {options?.icon && (
-                    <View style={layout.buttonIcon}>
+                    <View style={styles.buttonIcon}>
                         <Ionicons name={options.icon} size={24} color="white" />
                     </View>
                 )}
@@ -64,3 +65,51 @@ function Button({ children, onPress, style, styles = [], options = {} }) {
 }
 
 export default Button;
+
+const styles = StyleSheet.create({
+    button: {
+        borderRadius: 9999,
+        paddingHorizontal: 20,
+        paddingVertical: 19,
+        alignSelf: 'flex-start',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 3
+    },
+    buttonText: {
+        fontSize: 18,
+        fontFamily: 'Lexend-Bold',
+        // fontWeight: 700
+    },
+    buttonIcon: {
+        position: 'absolute',
+        right: 20
+    },
+    buttonActive: {
+        transform: [
+            { scale: 0.95 }
+        ]
+    },
+    buttonDefault: {
+        // backgroundColor: colorPrimary,
+        borderWidth: 1,
+        borderColor: colors.colorDefaultBorder
+    },
+    buttonDefaultActive: {
+        backgroundColor: colors.colorDefaultActive
+    },
+    buttonDefaultText: {
+        color: colors.colorDefaultText
+    },
+    buttonPrimary: {
+        backgroundColor: colors.colorPrimary,
+
+    },
+    buttonPrimaryActive: {
+        backgroundColor: colors.colorPrimaryActive
+    },
+    buttonPrimaryText: {
+        color: colors.colorPrimaryText
+    }
+});

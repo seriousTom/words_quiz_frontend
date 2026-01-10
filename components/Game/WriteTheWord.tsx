@@ -58,7 +58,7 @@ function WriteTheWord() {
 
     const hint = translation
         .split('')
-        .map((char, index) => (revealed[index] ? char : ' '))
+        .map((char, index) => (revealed[index] ? char : '-'))
         .join('');
 
 
@@ -66,14 +66,19 @@ function WriteTheWord() {
         <View>
             <Text style={styles.wordText}>{currentWord.word}</Text>
         </View>
+        <View style={styles.hintContainer}>
+            {translation.split('').map((char, index) => {
+                return <View style={styles.hintLetterWrapper}><Text>{revealed[index] ? char : ' '}</Text></View>;
+            })}
+        </View>
         <View>
             <Text>{hint}</Text>
         </View>
         <View>
-            <Input textInputConfig={{value: guess, onChangeText: setGuess}}/>
+            <Input style={[layout.mb20]} textInputConfig={{placeholder: 'Type translation...', value: guess, onChangeText: setGuess}} icon='pencil-sharp' />
         </View>
         <View>
-            <Button style="primary" styles={[layout.buttonBlock]} onPress={guessWord} options={{icon: 'checkmark-circle-outline'}}>GUESS</Button>
+            <Button style="primary" outerStyles={[layout.fullWidth]} onPress={guessWord} options={{icon: 'checkmark-circle-outline'}}>GUESS</Button>
         </View>
     </View>;
 }
@@ -89,5 +94,18 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 48,
         textAlign: 'center',
+    },
+    hintContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+    },
+    hintLetterWrapper: {
+        backgroundColor: '#fff',
+        borderWidth: 1,
+        borderColor: '#000',
+        borderRadius: '50%',
+        width: 36,
+        height: 36,
+        marginHorizontal: 5
     }
 });

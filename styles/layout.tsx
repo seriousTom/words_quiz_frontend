@@ -1,14 +1,5 @@
 import {StyleSheet} from "react-native";
-
-const colorDefaultBorder = '#6c757d';
-const colorDefaultText = '#212529';
-const colorDefaultActive = '#e2e6ea';
-
-const darkTextColor = '#0f172a';
-
-const colorPrimaryText = '#ffffff';
-const colorPrimary = '#007bff';
-const colorPrimaryActive = '#0062cc';
+import colors from "./colors";
 
 const baseContainer = {
     flex: 1,
@@ -38,55 +29,13 @@ export const layout = StyleSheet.create({
     mb15: {
         marginBottom: 15,
     },
+    mb20: {
+        marginBottom: 20,
+    },
     label: {
         fontWeight: 700,
     },
-    button: {
-        borderRadius: 9999,
-        paddingHorizontal: 20,
-        paddingVertical: 19,
-        alignSelf: 'flex-start',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        elevation: 3
-    },
-    buttonText: {
-        fontSize: 18,
-        fontFamily: 'Lexend-Bold',
-        // fontWeight: 700
-    },
-    buttonIcon: {
-        position: 'absolute',
-        right: 20
-    },
-    buttonActive: {
-        transform: [
-            { scale: 0.95 }
-        ]
-    },
-    buttonDefault: {
-        // backgroundColor: colorPrimary,
-        borderWidth: 1,
-        borderColor: colorDefaultBorder
-    },
-    buttonDefaultActive: {
-        backgroundColor: colorDefaultActive
-    },
-    buttonDefaultText: {
-        color: colorDefaultText
-    },
-    buttonPrimary: {
-        backgroundColor: colorPrimary,
-
-    },
-    buttonPrimaryActive: {
-        backgroundColor: colorPrimaryActive
-    },
-    buttonPrimaryText: {
-        color: colorPrimaryText
-    },
-    buttonBlock: {
+    fullWidth: {
         width: '100%'
     }
 });
