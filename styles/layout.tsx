@@ -32,6 +32,12 @@ export const layout = StyleSheet.create({
     mb20: {
         marginBottom: 20,
     },
+    mb30: {
+        marginBottom: 30,
+    },
+    mb50: {
+        marginBottom: 50,
+    },
     label: {
         fontWeight: 700,
     },

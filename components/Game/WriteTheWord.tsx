@@ -4,6 +4,9 @@ import Button from "../UI/Button";
 import {useContext, useState, useEffect, useRef} from "react";
 import {GameContext} from "../../context/GameContext";
 import {layout} from "../../styles/layout";
+import colors from "../../styles/colors";
+import {AppText} from "../UI/AppText";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 function WriteTheWord() {
     const mistakes = useRef(0);
@@ -63,17 +66,20 @@ function WriteTheWord() {
 
 
     return <View>
-        <View>
-            <Text style={styles.wordText}>{currentWord.word}</Text>
+        <View style={layout.mb15}>
+            <AppText variant='bold' style={styles.wordText}>{currentWord.word}</AppText>
         </View>
-        <View style={styles.hintContainer}>
+        <View style={[layout.mb20, styles.taskContainer]}>
+            <Ionicons name='language-outline' size={24} color={colors.colorPrimary} /><AppText variant='bold' style={styles.taskText}>TRANSLATE TO SPANISH</AppText>
+        </View>
+        <View style={[styles.hintContainer, layout.mb20]}>
             {translation.split('').map((char, index) => {
-                return <View style={styles.hintLetterWrapper}><Text>{revealed[index] ? char : ' '}</Text></View>;
+                return <View style={[styles.hintLetterWrapper, revealed[index] ? styles.hintLetterRevealed : styles.hintLetterHidden]} key={'hint-' + index}><AppText variant='bold' style={styles.hintLetter}>{revealed[index] ? char : ' '}</AppText></View>;
             })}
         </View>
-        <View>
-            <Text>{hint}</Text>
-        </View>
+        {/*<View>*/}
+        {/*    <Text>{hint}</Text>*/}
+        {/*</View>*/}
         <View>
             <Input style={[layout.mb20]} textInputConfig={{placeholder: 'Type translation...', value: guess, onChangeText: setGuess}} icon='pencil-sharp' />
         </View>
@@ -91,21 +97,45 @@ const styles = StyleSheet.create({
     },
     wordText: {
         color: '#0f172a',
-        fontWeight: 'bold',
         fontSize: 48,
         textAlign: 'center',
+    },
+    taskContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
+    taskText: {
+        fontSize: 14,
+        color: colors.colorDefaultBorder
     },
     hintContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
+        flexWrap: 'wrap'
     },
     hintLetterWrapper: {
         backgroundColor: '#fff',
-        borderWidth: 1,
-        borderColor: '#000',
+        borderWidth: 2,
         borderRadius: '50%',
         width: 36,
         height: 36,
-        marginHorizontal: 5
+        paddingVertical: 0,
+        marginHorizontal: 5,
+        marginBottom: 3
+    },
+    hintLetterHidden: {
+        borderStyle: 'dashed',
+        backgroundColor: '#fff',
+        borderColor: colors.colorDefaultActive
+    },
+    hintLetterRevealed: {
+        borderStyle: 'solid',
+        backgroundColor: colors.colorInfo,
+        borderColor: colors.colorPrimaryActive
+    },
+    hintLetter: {
+        fontSize: 20,
+        textAlign: 'center',
+        color: colors.colorPrimaryActive,
     }
 });

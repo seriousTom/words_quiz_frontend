@@ -1,6 +1,6 @@
-import {Text, View} from "react-native";
+import {StyleSheet, Text, View} from "react-native";
 import {wordsApi} from "../../api/wordsApi";
-import {use, useEffect, useState, useContext, useMemo} from "react";
+import {use, useEffect, useState, useContext, useMemo, useLayoutEffect} from "react";
 import {GAME_MODES} from "../../constants/gameMode";
 import WriteTheWord from "../../components/Game/WriteTheWord";
 import {GameContext} from "../../context/GameContext";
@@ -8,6 +8,8 @@ import {useNavigation} from '@react-navigation/native';
 import {Alert} from 'react-native';
 import MultipleChoice from "../../components/Game/MultipleChoice";
 import {layout} from "../../styles/layout";
+import {AppText} from "../../components/UI/AppText";
+import colors from "../../styles/colors";
 
 const language = 'es';
 
@@ -31,6 +33,13 @@ function Game({route}) {
         handleCorrectGuess,
         finishGame
     } = useContext(GameContext);
+
+    const ProgressBar = () => <View style={styles.gameHeader}>
+        <AppText variant='bold' style={styles.progressBarText}>Word {(numberOfWords - words.length + 1)}/{numberOfWords}</AppText>
+        <View style={styles.progressBar}>
+            <View style={[styles.progressBarFilled, {width: `${progress * 100}%`}]}></View>
+        </View>
+    </View>;
 
     //choose random component when the current word changes for the mixed mode
     const mixedModeComponent = useMemo(() => {
@@ -57,6 +66,16 @@ function Game({route}) {
             numberOfWords !== null
         );
     }, [isLoading, words, numberOfWords]);
+
+    const progress = numberOfWords && !isGameOver ? (numberOfWords - words.length) / numberOfWords : null;
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerTitleAlign: 'center',
+            headerTitleStyle: { width: '100%' },
+            headerTitle: () => numberOfWords && !isGameOver && <ProgressBar/>,
+        });
+    }, [navigation, words, isGameOver]);
 
     useEffect(() => {
         //if endless game mode is chosen and need to fetch more words
@@ -124,3 +143,24 @@ function Game({route}) {
 }
 
 export default Game;
+
+const styles = StyleSheet.create({
+    gameHeader: {
+        alignItems: 'center',
+        marginLeft: -45,
+        // borderWidth: 1,
+        // borderColor: '#000',
+    },
+    progressBarText: {
+        fontSize: 18
+    },
+    progressBar: {
+        width: 150,
+        height: 4,
+        backgroundColor: colors.colorInfoActive
+    },
+    progressBarFilled: {
+        height: 4,
+        backgroundColor: colors.colorPrimary
+    }
+});
