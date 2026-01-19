@@ -24,6 +24,7 @@ function Game({route}) {
     const {numberOfWords, gameMode} = route.params;
     const {
         words,
+        wordsGuessed,
         currentWord,
         isLoading,
         isFinishing,
@@ -40,6 +41,8 @@ function Game({route}) {
             <View style={[styles.progressBarFilled, {width: `${progress * 100}%`}]}></View>
         </View>
     </View>;
+
+    const TotalWordsGuessed = () => <View style={styles.gameHeader}><AppText variant='bold' style={styles.progressBarText}>Words guessed: {wordsGuessed}</AppText></View>
 
     //choose random component when the current word changes for the mixed mode
     const mixedModeComponent = useMemo(() => {
@@ -73,7 +76,11 @@ function Game({route}) {
         navigation.setOptions({
             headerTitleAlign: 'center',
             headerTitleStyle: { width: '100%' },
-            headerTitle: () => numberOfWords && !isGameOver && <ProgressBar/>,
+            headerTitle: () => {
+                if (isGameOver) return null;
+                if (numberOfWords) return <ProgressBar />;
+                return <TotalWordsGuessed />;
+            },
         });
     }, [navigation, words, isGameOver]);
 

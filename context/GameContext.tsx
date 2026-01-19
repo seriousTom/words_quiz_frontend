@@ -7,6 +7,7 @@ export const GameContext = createContext(null);
 
 export const GameProvider = ({children}) => {
     const [words, setWords] = useState([]);
+    const [wordsGuessed, setWordsguessed] = useState(0);
     // const [currentWord, setCurrentWord] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isFinishing, setIsFinishing] = useState(false);
@@ -37,6 +38,7 @@ export const GameProvider = ({children}) => {
                 return prevWords.filter(prevWord => prevWord.word.toLowerCase() != currentWord.word.toLowerCase())
             }
         );
+        setWordsguessed(wordsGuessed + 1);
     };
 
     const finishGame = async () => {
@@ -92,6 +94,7 @@ export const GameProvider = ({children}) => {
 
     return <GameContext.Provider value={{
         words,
+        wordsGuessed,
         currentWord,
         isLoading,
         fetchWords,
