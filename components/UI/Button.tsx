@@ -4,7 +4,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRef, useState } from "react";
 import colors from "../../styles/colors";
 
-function Button({ children, onPress, style, outerStyles = [], options = {} }) {
+function Button({ children, onPress, style, outerButtonStyles = [], options = {} }) {
     const scale = useRef(new Animated.Value(1)).current;
     const [isPressed, setIsPressed] = useState(false);
 
@@ -20,6 +20,11 @@ function Button({ children, onPress, style, outerStyles = [], options = {} }) {
             break;
         case "default":
             pressableClass = styles.buttonDefault;
+            pressedClass = styles.buttonDefaultActive; // for color feedback
+            textClass = styles.buttonDefaultText;
+            break;
+        case "light":
+            pressableClass = styles.buttonLight;
             pressedClass = styles.buttonDefaultActive; // for color feedback
             textClass = styles.buttonDefaultText;
             break;
@@ -48,7 +53,7 @@ function Button({ children, onPress, style, outerStyles = [], options = {} }) {
                     styles.button,
                     pressableClass,
                     isPressed && pressedClass,
-                    ...outerStyles,
+                    ...outerButtonStyles,
                     { transform: [{ scale }] },
                 ]}
             >
@@ -111,5 +116,13 @@ const styles = StyleSheet.create({
     },
     buttonPrimaryText: {
         color: colors.colorPrimaryText
-    }
+    },
+    buttonLight: {
+        backgroundColor: colors.lightColor,
+        borderWidth: 1,
+        borderColor: colors.colorLightBorder
+    },
+    buttonLightText: {
+        color: colors.darkTextColor
+    },
 });

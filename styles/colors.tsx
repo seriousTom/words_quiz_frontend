@@ -2,6 +2,7 @@ export default {
     headerBackgroundColor: '#f6f7f8',
     mainBackgroundColor: '#f6f7f8',
     colorDefaultBorder: '#6c757d',
+    colorLightBorder: '#e5e7eb',
     colorDefaultText: '#212529',
     colorDefaultActive: '#e2e6ea',
     colorDefault: '#e5e7eb',
@@ -9,7 +10,19 @@ export default {
     colorPrimaryText: '#ffffff',
     colorPrimary: '#007bff',
     colorPrimaryActive: '#0062cc',
+    primaryTextColor: '#157fed',
     colorDanger: '#ff3333',
     colorInfo: '#e0eaf7',
     colorInfoActive: '#e1e7ef',
+    lightColor: '#fff',
+    multipleChoice: {
+        variantAColor: '#fdf3f8',
+        variantAColorDark: '#ec4899',
+        variantBColor: '#f0f6ff',
+        variantBColorDark: '#0167ff',
+        variantCColor: '#faf5ff',
+        variantCColorDark: '#a856f7',
+        variantDColor: '#ecfef6',
+        variantDColorDark: '#12b981',
+    }
 };

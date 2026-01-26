@@ -42,7 +42,12 @@ function Game({route}) {
         </View>
     </View>;
 
-    const TotalWordsGuessed = () => <View style={styles.gameHeader}><AppText variant='bold' style={styles.progressBarText}>Words guessed: {wordsGuessed}</AppText></View>
+    const TotalWordsGuessed = () => (
+        <View style={styles.wordsGuessedHeader}>
+            <AppText variant='bold' style={styles.wordsGuessedText}>Words guessed:</AppText>
+            <AppText variant='bold' style={styles.wordsGuessedNumber}>{wordsGuessed}</AppText>
+        </View>
+    );
 
     //choose random component when the current word changes for the mixed mode
     const mixedModeComponent = useMemo(() => {
@@ -155,8 +160,6 @@ const styles = StyleSheet.create({
     gameHeader: {
         alignItems: 'center',
         marginLeft: -45,
-        // borderWidth: 1,
-        // borderColor: '#000',
     },
     progressBarText: {
         fontSize: 18
@@ -169,5 +172,25 @@ const styles = StyleSheet.create({
     progressBarFilled: {
         height: 4,
         backgroundColor: colors.colorPrimary
-    }
+    },
+    wordsGuessedHeader: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        marginLeft: -45,
+        borderWidth: 1,
+        borderColor: colors.colorDefault,
+        borderRadius: 9999,
+        backgroundColor: colors.lightColor
+    },
+    wordsGuessedText: {
+        fontSize: 14
+    },
+    wordsGuessedNumber: {
+        fontSize: 14,
+        color: colors.primaryTextColor,
+        marginLeft: 5,
+    },
 });

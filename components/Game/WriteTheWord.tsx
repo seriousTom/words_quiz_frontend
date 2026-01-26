@@ -84,7 +84,7 @@ function WriteTheWord() {
             <Input style={[layout.mb20]} textInputConfig={{placeholder: 'Type translation...', value: guess, onChangeText: setGuess}} icon='pencil-sharp' />
         </View>
         <View>
-            <Button style="primary" outerStyles={[layout.fullWidth]} onPress={guessWord} options={{icon: 'checkmark-circle-outline'}}>GUESS</Button>
+            <Button style="primary" outerButtonStyles={[layout.fullWidth]} onPress={guessWord} options={{icon: 'checkmark-circle-outline'}}>GUESS</Button>
         </View>
     </View>;
 }
