@@ -10,6 +10,7 @@ import MultipleChoice from "../../components/Game/MultipleChoice";
 import {layout} from "../../styles/layout";
 import {AppText} from "../../components/UI/AppText";
 import colors from "../../styles/colors";
+import {WORD_DISPLAY_LIST} from "../../constants/wordDisplay";
 
 const language = 'es';
 
@@ -21,7 +22,7 @@ const GAME_COMPONENTS = {
 
 function Game({route}) {
     const navigation = useNavigation();
-    const {numberOfWords, gameMode} = route.params;
+    const {numberOfWords, gameMode, wordDisplay} = route.params;
     const {
         words,
         wordsGuessed,
@@ -56,6 +57,13 @@ function Game({route}) {
         const components = GAME_COMPONENTS[GAME_MODES.MIXED];
         return components[Math.floor(Math.random() * components.length)];
     }, [currentWord, gameMode]);
+
+    const wordDisplayType = useMemo(() => {
+        if (wordDisplay !== WORD_DISPLAY_LIST.MIXED) return wordDisplay;
+
+        const components = [WORD_DISPLAY_LIST.WORD, WORD_DISPLAY_LIST.FLASHCARD];
+        return components[Math.floor(Math.random() * components.length)];
+    }, [currentWord, wordDisplay]);
 
     const GameModeComponent =
         gameMode === GAME_MODES.MIXED
@@ -150,7 +158,7 @@ function Game({route}) {
     }
 
     return <View style={layout.container}>
-        <GameModeComponent />
+        <GameModeComponent wordDisplayType={wordDisplayType} />
     </View>;
 }
 

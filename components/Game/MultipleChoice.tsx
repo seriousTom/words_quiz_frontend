@@ -7,8 +7,9 @@ import colors from "../../styles/colors";
 import {layout} from "../../styles/layout";
 import {AppText} from "../UI/AppText";
 import VariantButton from "./VariantButton";
+import WordDisplay from "./WordDisplay";
 
-function MultipleChoice() {
+function MultipleChoice({wordDisplayType}) {
     const mistakes = useRef(0);
     const {currentWord, handleCorrectGuess, logGuess} = useContext(GameContext);
     const variantStyles = [
@@ -29,7 +30,8 @@ function MultipleChoice() {
 
     return <View>
         <View style={layout.mb15}>
-            <AppText variant='bold' style={styles.wordText}>{currentWord.word}</AppText>
+            <WordDisplay display={wordDisplayType} word={currentWord}/>
+            {/*<AppText variant='bold' style={styles.wordText}>{currentWord.word}</AppText>*/}
         </View>
         {/*<View>*/}
         {/*    {currentWord.candidates.map((candidate) => <Button key={'candidate-' + candidate.id} style="primary" onPress={() => { guessWord(candidate) } }>{candidate.translation}</Button>)}*/}

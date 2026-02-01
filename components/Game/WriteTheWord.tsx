@@ -7,8 +7,9 @@ import {layout} from "../../styles/layout";
 import colors from "../../styles/colors";
 import {AppText} from "../UI/AppText";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import WordDisplay from "./WordDisplay";
 
-function WriteTheWord() {
+function WriteTheWord({wordDisplayType}) {
     const mistakes = useRef(0);
     const [guess, setGuess] = useState('');
     const {currentWord, handleCorrectGuess, logGuess} = useContext(GameContext);
@@ -67,7 +68,8 @@ function WriteTheWord() {
 
     return <View>
         <View style={layout.mb15}>
-            <AppText variant='bold' style={styles.wordText}>{currentWord.word}</AppText>
+            <WordDisplay display={wordDisplayType} word={currentWord}/>
+            {/*<AppText variant='bold' style={styles.wordText}>{currentWord.word}</AppText>*/}
         </View>
         <View style={[layout.mb20, styles.taskContainer]}>
             <Ionicons name='language-outline' size={24} color={colors.colorPrimary} /><AppText variant='bold' style={styles.taskText}>TRANSLATE TO SPANISH</AppText>
