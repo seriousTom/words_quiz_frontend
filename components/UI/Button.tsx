@@ -1,12 +1,11 @@
-import { layout } from "../../styles/layout";
 import { Pressable, Text, View, Animated, StyleSheet } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useRef, useState } from "react";
 import colors from "../../styles/colors";
+import {usePressAnimation} from "../../hooks/usePressAnimation";
 
 function Button({ children, onPress, style, outerButtonStyles = [], options = {} }) {
-    const scale = useRef(new Animated.Value(1)).current;
-    const [isPressed, setIsPressed] = useState(false);
+    const { scale, isPressed, pressHandlers } = usePressAnimation();
 
     let pressableClass = null;
     let pressedClass = null;
@@ -30,24 +29,8 @@ function Button({ children, onPress, style, outerButtonStyles = [], options = {}
             break;
     }
 
-    const onPressIn = () => {
-        Animated.spring(scale, {
-            toValue: 0.96,
-            useNativeDriver: true,
-        }).start();
-        setIsPressed(true);
-    };
-
-    const onPressOut = () => {
-        Animated.spring(scale, {
-            toValue: 1,
-            useNativeDriver: true,
-        }).start();
-        setIsPressed(false);
-    };
-
     return (
-        <Pressable onPress={onPress} onPressIn={onPressIn} onPressOut={onPressOut}>
+        <Pressable onPress={onPress} {...pressHandlers}>
             <Animated.View
                 style={[
                     styles.button,

@@ -1,44 +1,28 @@
-import { layout } from "../../styles/layout";
 import { Pressable, Text, View, Animated, StyleSheet } from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRef, useState } from "react";
 import colors from "../../styles/colors";
+import {usePressAnimation} from "../../hooks/usePressAnimation";
 
 function VariantButton({ children, variantIndex, onPress, style, outerButtonStyles = [], options = {} }) {
-    const scale = useRef(new Animated.Value(1)).current;
-    const [isPressed, setIsPressed] = useState(false);
+    const { scale, isPressed, pressHandlers } = usePressAnimation();
 
-    const onPressIn = () => {
-        Animated.spring(scale, {
-            toValue: 0.96,
-            useNativeDriver: true,
-        }).start();
-        setIsPressed(true);
-    };
-
-    const onPressOut = () => {
-        Animated.spring(scale, {
-            toValue: 1,
-            useNativeDriver: true,
-        }).start();
-        setIsPressed(false);
-    };
+    const variant = variants[variantIndex];
+    const vStyles = variantStyles[variant];
 
     return (
-        <Pressable onPress={onPress} onPressIn={onPressIn} onPressOut={onPressOut}>
+        <Pressable onPress={onPress} {...pressHandlers}>
             <Animated.View
                 style={[
-                    variantStyles[variants[variantIndex]].variantButton,
+                    vStyles.variantButton,
                     styles.button,
-                    isPressed && variantStyles[variants[variantIndex]].variantButtonActive,
+                    isPressed && vStyles.variantButtonActive,
                     ...outerButtonStyles,
                     { transform: [{ scale }] },
                 ]}
             >
-                <View style={[styles.variantCircle, variantStyles[variants[variantIndex]].variantCircle, isPressed && variantStyles[variants[variantIndex]].variantCircleActive]}>
-                    <Text style={[styles.variantCircleText, variantStyles[variants[variantIndex]].variantCircleText, isPressed && variantStyles[variants[variantIndex]].variantCircleTextActive]}>{variants[variantIndex]}</Text>
+                <View style={[styles.variantCircle, vStyles.variantCircle, isPressed && vStyles.variantCircleActive]}>
+                    <Text style={[styles.variantCircleText, vStyles.variantCircleText, isPressed && vStyles.variantCircleTextActive]}>{variants[variantIndex]}</Text>
                 </View>
-                <Text style={[styles.buttonText, styles.buttonText, isPressed && variantStyles[variants[variantIndex]].variantButtonTextActive]}>{children}</Text>
+                <Text style={[styles.buttonText, styles.buttonText, isPressed && vStyles.variantButtonTextActive]}>{children}</Text>
             </Animated.View>
         </Pressable>
     );
