@@ -7,6 +7,15 @@ const axiosClient = axios.create({
     baseURL: API_BASE_URL,
     timeout: 10000,
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+    paramsSerializer: {
+        serialize: (params) => {
+            return new URLSearchParams(
+                Object.entries(params).filter(
+                    ([, value]) => value !== null && value !== undefined
+                )
+            ).toString();
+        }
+    }
 });
 
 // Attach token automatically

@@ -29,7 +29,6 @@ function Game({route}) {
         currentWord,
         isLoading,
         isFinishing,
-        fetchWords,
         fetchNextWordsWithLogs,
         getNextWord,
         handleCorrectGuess,
@@ -72,7 +71,7 @@ function Game({route}) {
 
     //fetch words when the game is loaded first
     useEffect(() => {
-        fetchNextWordsWithLogs(language, gameMode, numberOfWords);
+        fetchNextWordsWithLogs({language: language, game_type: gameMode, word_display: wordDisplay, per_page: numberOfWords});
     }, []);
 
     const isGameOver = useMemo(() => {
@@ -101,9 +100,9 @@ function Game({route}) {
         //if endless game mode is chosen and need to fetch more words
         if (!isLoading && words.length === 0 && numberOfWords === null) {
             console.log('fetching more words...');
-            fetchNextWordsWithLogs(language, gameMode, numberOfWords);
+            fetchNextWordsWithLogs({language: language, game_type: gameMode, word_display: wordDisplay, per_page: numberOfWords});
         }
-    }, [words, isLoading, numberOfWords, fetchWords]);
+    }, [words, isLoading, numberOfWords, fetchNextWordsWithLogs]);
 
     useEffect(() => {
         if (isGameOver) {

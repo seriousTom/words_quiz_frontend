@@ -18,9 +18,10 @@ export const GameProvider = ({children}) => {
         return words[Math.floor(Math.random() * words.length)];
     }, [words]);
 
-    const fetchWords = async (language, gameType, numberOfWords) => {
+    //params: game_type, word_display, number_of_words_langage
+    const fetchWords = async (params) => {
         // setIsLoading(true);
-        const {data: {data}} = await wordsApi.getGameWords(language, gameType, numberOfWords);
+        const {data: {data}} = await wordsApi.getGameWords(params);
         setWords(data);
         // setIsLoading(false);
     };
@@ -76,7 +77,7 @@ export const GameProvider = ({children}) => {
         await AsyncStorage.setItem('guesses_logs', JSON.stringify(logs));
     };
 
-    const fetchNextWordsWithLogs = async (language, gameType, numberOfWords) => {
+    const fetchNextWordsWithLogs = async (params) => {
         setIsLoading(true);
 
         // Flush local logs first
@@ -88,7 +89,7 @@ export const GameProvider = ({children}) => {
         }
 
         // Fetch next batch
-        await fetchWords(language, gameType, numberOfWords);
+        await fetchWords(params);
         setIsLoading(false);
     };
 
