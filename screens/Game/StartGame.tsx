@@ -1,12 +1,18 @@
-import {Text, View, Pressable, StyleSheet} from "react-native";
+import {Text, View, Pressable, StyleSheet, ScrollView} from "react-native";
 import {useState} from "react";
 import {layout} from "../../styles/layout";
 import Button from "../../components/UI/Button";
 import {GameMode, GAME_MODES, GAME_MODE_LABELS} from "../../constants/gameMode";
 import {WORD_DISPLAY_LABELS, WORD_DISPLAY_LIST, WordDisplay} from "../../constants/wordDisplay";
+import {AppText} from "../../components/UI/AppText";
+import colors from "../../styles/colors";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import RoundConfigButton from "../../components/Game/RoundConfigButton";
 
 function StartGame({navigation}) {
-    const wordsOptions = [3, 25, 50, 100];
+
+    // const wordsOptions = [3, 25, 50, 100];
+    const wordsOptions = [3, 25, 100];
 
     const [numberOfWords, setNumberOfWords] = useState<number | null>(null);
     const [wordDisplay, setWordDisplay] = useState<WordDisplay>(WORD_DISPLAY_LIST.WORD);
@@ -22,39 +28,55 @@ function StartGame({navigation}) {
     };
 
     return <View style={layout.container}>
-        <View>
-            <View style={layout.mb15}>
-                <Text style={[layout.label]}>Select number of words</Text>
+        <ScrollView>
+            <View>
+                <View style={[layout.mb15, styles.configurationLabelWrapper]}>
+                    <Ionicons name='game-controller-outline' size={18} color={colors.colorPrimary} style={layout.mr5}/>
+                    <AppText style={[styles.configurationLabel]} variant='bold'>Game mode</AppText>
+                </View>
+                <View style={styles.roundConfigWrapper}>
+                    {Object.entries(GAME_MODE_LABELS).map(([mode, labelData]) =>
+                        (<RoundConfigButton onPress={() => { setGameMode(mode as GameMode); }} key={'game-mode-' + mode} iconName={labelData.icon} isSelected={mode == gameMode}>{labelData.label}</RoundConfigButton>))}
+
+                </View>
             </View>
-            <View style={[styles.selectionsContainer, layout.mb10]}>
-                {wordsOptions.map(value =>
-                    (<Button key={'words-number-'+value} onPress={() => {setNumberOfWords(value);}} style={value == numberOfWords ? 'primary' : 'default'} styles={[layout.mh5]}>{value}</Button>))}
+            <View>
+                <View style={[layout.mb15, styles.configurationLabelWrapper]}>
+                    <Ionicons name='eye-outline' size={18} color={colors.colorPrimary} style={layout.mr5}/>
+                    <AppText style={[styles.configurationLabel]} variant='bold'>Word display</AppText>
+                </View>
+                <View style={styles.roundConfigWrapper}>
+                    {Object.entries(WORD_DISPLAY_LABELS).map(([wDisplay, wLabelData]) =>
+                        (<RoundConfigButton
+                            key={'word-display-' + wDisplay}
+                            iconName={wLabelData.icon}
+                            isSelected={wDisplay == wordDisplay}
+                            onPress={() => {
+                                setWordDisplay(wDisplay as WordDisplay);
+                            }}>{wLabelData.label}</RoundConfigButton>))}
+                </View>
             </View>
-            <View style={styles.selectionsContainer}>
-                <Button onPress={() => {setNumberOfWords(null);}} style={numberOfWords === null ? 'primary' : 'default'}>Endless</Button>
+            <View>
+                <View style={[layout.mb15, styles.configurationLabelWrapper]}>
+                    <Ionicons name='add-outline' size={18} color={colors.colorPrimary} style={layout.mr5}/>
+                    <AppText style={[styles.configurationLabel]} variant='bold'>Number of words</AppText>
+                </View>
+                <View style={[styles.selectionsContainer, layout.mb10]}>
+                    {wordsOptions.map(value =>
+                        (<Button key={'words-number-' + value} onPress={() => {
+                            setNumberOfWords(value);
+                        }} outerButtonClass={styles.wordsSelectionMainButton} outerPressableClass={[styles.wordsSelectionButton, numberOfWords == value && styles.wordsSelectionSelected]} outerTextClass={[styles.wordsSelectionButtonText, numberOfWords == value && styles.wordsSelectionButtonTextSelected]}>{value}</Button>))}
+                    <Button onPress={() => {
+                        setNumberOfWords(null);
+                    }} outerButtonClass={styles.wordsSelectionMainButton} outerPressableClass={[styles.wordsSelectionButton, numberOfWords == null && styles.wordsSelectionSelected]}>
+                        <Ionicons name='infinite-outline' size={20} color={numberOfWords == null ? colors.colorPrimary : colors.colorDefaultText} style={layout.mr5}/>
+                    </Button>
+                </View>
             </View>
-        </View>
-        <View>
-            <View style={layout.mb15}>
-                <Text style={[layout.label]}>Select word display</Text>
+            <View style={styles.selectionWrapper}>
+                <Button style='primary' onPress={startGame}>Start game</Button>
             </View>
-            <View style={[styles.selectionsContainer, layout.mb10]}>
-                {Object.entries(WORD_DISPLAY_LABELS).map(([wDisplay, label]) =>
-                    (<View style={[styles.selectionWrapper, layout.mb5]} key={'game-mode-'+wDisplay}><Button onPress={() => {setWordDisplay(wDisplay as WordDisplay);}} style={wDisplay == wordDisplay ? 'primary' : 'default'}>{label}</Button></View>))}
-            </View>
-        </View>
-        <View>
-            <View style={layout.mb15}>
-                <Text style={[layout.label]}>Select game type</Text>
-            </View>
-            <View style={[styles.selectionsContainer, layout.mb10]}>
-                {Object.entries(GAME_MODE_LABELS).map(([mode, label]) =>
-                    (<View style={[styles.selectionWrapper, layout.mb5]} key={'game-mode-'+mode}><Button onPress={() => {setGameMode(mode as GameMode);}} style={mode == gameMode ? 'primary' : 'default'}>{label}</Button></View>))}
-            </View>
-        </View>
-        <View style={styles.selectionWrapper}>
-            <Button style='primary' onPress={startGame}>Start game</Button>
-        </View>
+        </ScrollView>
     </View>;
 }
 
@@ -65,12 +87,52 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexWrap: 'wrap',
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-around',
+        backgroundColor: colors.colorDefault,
+        borderRadius: 9999,
+        paddingVertical: 5
     },
     selectionWrapper: {
         display: 'flex',
         flexDirection: 'row',
         width: '100%',
         justifyContent: 'center',
+    },
+    configurationLabelWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    configurationLabel: {
+        fontSize: 16,
+    },
+    roundConfigWrapper: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-around'
+    },
+    wordsSelectionMainButton: {
+        borderRadius: 9999,
+        paddingHorizontal: 0,
+        paddingVertical: 12,
+        alignSelf: 'flex-start',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        // elevation: 3
+    },
+    wordsSelectionButton: {
+        width: 85,
+        backgroundColor: colors.colorDefault,
+    },
+    wordsSelectionSelected: {
+        backgroundColor: colors.lightColor,
+    },
+    wordsSelectionButtonText: {
+        fontSize: 14,
+        color: colors.colorDefaultText
+    },
+    wordsSelectionButtonTextSelected: {
+        color: colors.primaryTextColor
     }
 });

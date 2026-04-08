@@ -1,12 +1,13 @@
-import { Pressable, Text, View, Animated, StyleSheet } from "react-native";
+import {Pressable, Text, View, Animated, StyleSheet} from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useRef, useState } from "react";
+import {useRef, useState} from "react";
 import colors from "../../styles/colors";
 import {usePressAnimation} from "../../hooks/usePressAnimation";
 
-function Button({ children, onPress, style, outerButtonStyles = [], options = {} }) {
-    const { scale, isPressed, pressHandlers } = usePressAnimation();
+function Button({children, onPress, style = null, outerButtonClass = null, outerPressableClass = null, outerPressedClass = null, outerTextClass = null, outerButtonStyles = [], options = {}}) {
+    const {scale, isPressed, pressHandlers} = usePressAnimation();
 
+    let buttonClass = styles.button;
     let pressableClass = null;
     let pressedClass = null;
     let textClass = null;
@@ -14,37 +15,45 @@ function Button({ children, onPress, style, outerButtonStyles = [], options = {}
     switch (style) {
         case "primary":
             pressableClass = styles.buttonPrimary;
-            pressedClass = styles.buttonPrimaryActive; // for color feedback
+            pressedClass = styles.buttonPrimaryActive;
             textClass = styles.buttonPrimaryText;
             break;
         case "default":
             pressableClass = styles.buttonDefault;
-            pressedClass = styles.buttonDefaultActive; // for color feedback
+            pressedClass = styles.buttonDefaultActive;
             textClass = styles.buttonDefaultText;
             break;
         case "light":
             pressableClass = styles.buttonLight;
-            pressedClass = styles.buttonDefaultActive; // for color feedback
+            pressedClass = styles.buttonDefaultActive;
             textClass = styles.buttonDefaultText;
             break;
+        default:
+            pressableClass = outerPressableClass;
+            pressedClass = outerPressedClass;
+            textClass = outerTextClass;
+    }
+
+    if(outerButtonClass) {
+        buttonClass = outerButtonClass;
     }
 
     return (
         <Pressable onPress={onPress} {...pressHandlers}>
             <Animated.View
                 style={[
-                    styles.button,
+                    buttonClass,
                     pressableClass,
                     isPressed && pressedClass,
                     ...outerButtonStyles,
-                    { transform: [{ scale }] },
+                    {transform: [{scale}]},
                 ]}
             >
                 <Text style={[styles.buttonText, textClass]}>{children}</Text>
 
                 {options?.icon && (
                     <View style={styles.buttonIcon}>
-                        <Ionicons name={options.icon} size={24} color="white" />
+                        <Ionicons name={options.icon} size={24} color="white"/>
                     </View>
                 )}
             </Animated.View>
@@ -76,7 +85,7 @@ const styles = StyleSheet.create({
     },
     buttonActive: {
         transform: [
-            { scale: 0.95 }
+            {scale: 0.95}
         ]
     },
     buttonDefault: {
@@ -92,7 +101,6 @@ const styles = StyleSheet.create({
     },
     buttonPrimary: {
         backgroundColor: colors.colorPrimary,
-
     },
     buttonPrimaryActive: {
         backgroundColor: colors.colorPrimaryActive

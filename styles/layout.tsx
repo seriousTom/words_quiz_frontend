@@ -17,6 +17,9 @@ export const layout = StyleSheet.create({
         borderWidth: 1,
         // flexDirection: 'column'
     },
+    rowDisplay: {
+        display: 'flex'
+    },
     mh5: {
         marginHorizontal: 5,
     },
@@ -37,6 +40,12 @@ export const layout = StyleSheet.create({
     },
     mb50: {
         marginBottom: 50,
+    },
+    mr5: {
+        marginRight: 5,
+    },
+    mr10: {
+        marginRight: 10,
     },
     label: {
         fontWeight: 700,

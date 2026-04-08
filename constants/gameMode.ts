@@ -1,5 +1,4 @@
 export const GAME_MODES = {
-    // FLASHCARDS: 'flashcards',
     WRITE: 'write',
     MULTIPLE_CHOICE: 'multiple_choice',
     MIXED: 'mixed'
@@ -8,9 +7,14 @@ export const GAME_MODES = {
 export type GameMode = typeof GAME_MODES[keyof typeof GAME_MODES];
 // export type GameMode = 'flashcards' | 'write' | 'multiple_choice' | 'mixed';
 
-export const GAME_MODE_LABELS: Record<GameMode, string> = {
+type GameModeData = {
+    label: string;
+    icon: string;
+};
+
+export const GAME_MODE_LABELS: Record<GameMode, GameModeData> = {
     // flashcards: 'Flashcards',
-    write: 'Write the word',
-    multiple_choice: 'Choose the correct word',
-    mixed: 'Mixed'
+    write: {label: 'Write it', icon: 'pencil-outline'},
+    multiple_choice: {label: 'Choose', icon: 'list-outline'},
+    mixed: {label: 'Mixed', icon: 'shuffle-outline'}
 };
