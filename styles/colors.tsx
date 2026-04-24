@@ -1,4 +1,6 @@
 export default {
+    secondaryBorder: '#cbd5e1',
+    secondaryText: '#64748b',
     headerBackgroundColor: '#f6f7f8',
     mainBackgroundColor: '#f6f7f8',
     colorDefaultBorder: '#6c757d',

@@ -8,6 +8,7 @@ import {AppText} from "../../components/UI/AppText";
 import colors from "../../styles/colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import RoundConfigButton from "../../components/Game/RoundConfigButton";
+import CategorySelectionButton from "../../components/Game/CategorySelectionButton";
 
 function StartGame({navigation}) {
 
@@ -17,6 +18,13 @@ function StartGame({navigation}) {
     const [numberOfWords, setNumberOfWords] = useState<number | null>(null);
     const [wordDisplay, setWordDisplay] = useState<WordDisplay>(WORD_DISPLAY_LIST.WORD);
     const [gameMode, setGameMode] = useState<GameMode>(GAME_MODES.WRITE);
+
+    const FAKE_CATEGORIES = [
+        {id: 1, name: 'Transport', icon: 'game-controller-outline'},
+        {id: 2, name: 'Technology', icon: 'game-controller-outline'},
+        {id: 3, name: 'Airport', icon: 'game-controller-outline'}
+    ];
+    const [selectedCategories, setSelectedCategories] = useState([]);
 
     const startGame = () => {
         console.log('starting...');
@@ -54,6 +62,31 @@ function StartGame({navigation}) {
                             onPress={() => {
                                 setWordDisplay(wDisplay as WordDisplay);
                             }}>{wLabelData.label}</RoundConfigButton>))}
+                </View>
+            </View>
+            <View>
+                <View style={[layout.mb15, styles.configurationLabelWrapper]}>
+                    <Ionicons name='shapes-outline' size={18} color={colors.colorPrimary} style={layout.mr5}/>
+                    <AppText style={[styles.configurationLabel]} variant='bold'>Categories</AppText>
+                </View>
+                <View style={styles.categoriesWrapper}>
+                    {FAKE_CATEGORIES.map((category) =>
+                        (<CategorySelectionButton
+                            key={'word-display-' + category.id}
+                            iconName={category.icon}
+                            isSelected={selectedCategories.includes(category.id)}
+                            outerButtonStyle={[styles.categoryButton]}
+                            onPress={() => {
+                                setSelectedCategories((prev) => {
+                                    if (prev.includes(category.id)) {
+                                        // remove
+                                        return prev.filter((id) => id !== category.id);
+                                    } else {
+                                        // add
+                                        return [...prev, category.id];
+                                    }
+                                });
+                            }}>{category.name}</CategorySelectionButton>))}
                 </View>
             </View>
             <View>
@@ -110,6 +143,13 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-around'
+    },
+    categoriesWrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+    },
+    categoryButton: {
+      marginBottom: 10
     },
     wordsSelectionMainButton: {
         borderRadius: 9999,

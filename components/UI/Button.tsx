@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        elevation: 3
+        elevation: 3,
     },
     buttonText: {
         fontSize: 18,
