@@ -37,7 +37,7 @@ function StartGame({navigation}) {
 
     return <View style={layout.container}>
         <ScrollView>
-            <View>
+            <View style={[layout.mb30]}>
                 <View style={[layout.mb15, styles.configurationLabelWrapper]}>
                     <Ionicons name='game-controller-outline' size={18} color={colors.colorPrimary} style={layout.mr5}/>
                     <AppText style={[styles.configurationLabel]} variant='bold'>Game mode</AppText>
@@ -48,7 +48,7 @@ function StartGame({navigation}) {
 
                 </View>
             </View>
-            <View>
+            <View style={[layout.mb30]}>
                 <View style={[layout.mb15, styles.configurationLabelWrapper]}>
                     <Ionicons name='eye-outline' size={18} color={colors.colorPrimary} style={layout.mr5}/>
                     <AppText style={[styles.configurationLabel]} variant='bold'>Word display</AppText>
@@ -64,7 +64,7 @@ function StartGame({navigation}) {
                             }}>{wLabelData.label}</RoundConfigButton>))}
                 </View>
             </View>
-            <View>
+            <View style={[layout.mb30]}>
                 <View style={[layout.mb15, styles.configurationLabelWrapper]}>
                     <Ionicons name='shapes-outline' size={18} color={colors.colorPrimary} style={layout.mr5}/>
                     <AppText style={[styles.configurationLabel]} variant='bold'>Categories</AppText>
@@ -89,7 +89,7 @@ function StartGame({navigation}) {
                             }}>{category.name}</CategorySelectionButton>))}
                 </View>
             </View>
-            <View>
+            <View style={[layout.mb30]}>
                 <View style={[layout.mb15, styles.configurationLabelWrapper]}>
                     <Ionicons name='add-outline' size={18} color={colors.colorPrimary} style={layout.mr5}/>
                     <AppText style={[styles.configurationLabel]} variant='bold'>Number of words</AppText>
@@ -106,8 +106,8 @@ function StartGame({navigation}) {
                     </Button>
                 </View>
             </View>
-            <View style={styles.selectionWrapper}>
-                <Button style='primary' onPress={startGame}>Start game</Button>
+            <View style={[styles.selectionWrapper, layout.mb30]}>
+                <Button style='primary' outerButtonStyles={[layout.fullWidth]} onPress={startGame}>Start game</Button>
             </View>
         </ScrollView>
     </View>;
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     },
     selectionWrapper: {
         display: 'flex',
-        flexDirection: 'row',
+        // flexDirection: 'row',
         width: '100%',
         justifyContent: 'center',
     },
@@ -174,5 +174,8 @@ const styles = StyleSheet.create({
     },
     wordsSelectionButtonTextSelected: {
         color: colors.primaryTextColor
+    },
+    startGameButton: {
+        width: '100%'
     }
 });

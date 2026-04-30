@@ -90,9 +90,16 @@ function GameScreens() {
             headerStyle: {
                 backgroundColor: colors.headerBackgroundColor
             },
+            // cardStyle: {
+            //     backgroundColor: '#fff',
+            // },
             headerShadowVisible: false,
         }}>
-            <GameStack.Screen name="StartGame" component={StartGame}/>
+            <GameStack.Screen name="StartGame" component={StartGame} options={{
+                title: 'Game Configuration',
+                headerTitleAlign: 'center',
+                headerTitleStyle: { width: '100%'},
+            }}/>
             <GameStack.Screen name="Game" component={GameScreen} />
         </GameStack.Navigator>
     );
